@@ -1,0 +1,2405 @@
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="stylesheet" href="bootstrap/css/bootstrap.css">
+        <title>Oscilloscope</title>
+    </head>
+    <style>
+        .smartSlider {
+            -webkit-appearance: none;
+            background: white;
+            border: 1px solid rgba(67, 66, 66, 0.761);
+            border-radius: 65535px;
+            width:180px;
+            height:7px;
+            outline: none;
+        }
+        .smartSlider::-webkit-slider-thumb {
+            outline: none;
+            -webkit-appearance: none;
+            appearance: none;
+            width: 21px;
+            height: 12px;
+            border-radius: 65535px;
+            background: #ff8c1a; 
+            cursor: pointer;
+        }
+
+
+        ::-webkit-scrollbar {
+            width: 0px;
+            height: 4px;
+            background-color: inherit;
+        }
+        ::-webkit-scrollbar-track {
+            
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #333; 
+            border-radius: 7000px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background:#555; 
+            border-radius: 7000px;
+        }
+        body{
+            background-color :rgb(29, 29, 31);
+            color: rgb(255,255,255);
+	    }
+        .elegantButton{
+            background-color: #ff8c1a; 
+            border: none;
+            color: white;
+            padding: 5px 12px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 20px;
+            border-radius: 65535px;
+        }
+
+
+        .mainView{
+            border:none;
+           /* margin-left: 1%;*/
+           margin-left: 3px;
+        }
+
+
+        .selectionDiv{
+            background-color :rgba(44, 42, 42, 0.666);
+            color: rgb(255,255,255);
+            word-wrap: break-word;
+            /* width: 143px; */
+            overflow-x: scroll;
+            width: calc(100% - 6px);
+            text-align: center;
+
+            max-height: 50px;
+		    overflow:scroll;
+            overflow-y: hidden;
+            
+
+            border-radius: 5px;
+            float: left;
+
+            border: 1px solid rgba(67, 66, 66, 0.761);
+            margin-top: 6px;
+            margin-bottom: 3px;
+            margin-left: 3px;
+            margin-right: 3px;
+            /* margin-right: 0.2%;
+            margin-left: 0.2%; */
+            font-size: 85%;
+        }
+
+        .contentDiv{
+            background-color :rgba(44, 42, 42, 0.666);
+            color: rgb(255,255,255);
+            word-wrap: break-word;
+            /* width: 83%; */
+            /* width: calc(100% - 158px); */
+            width: calc(100% - 6px);
+            height: calc(100% - 14px);
+		    overflow:scroll;
+    
+            border-radius: 5px;
+            float: left;
+
+            border: 1px solid rgba(67, 66, 66, 0.761);
+            margin-top: 3px;
+            margin-bottom: 6px;
+            margin-left: 3px;
+            margin-right: 3px;
+            /* margin-right: 0.2%;
+            margin-left: 0.2%; */
+            display: none;
+        }
+        .subContent{
+            border: 1px solid rgba(67, 66, 66, 0.761);
+            margin-top: 7px;
+            margin-bottom: 7px;
+            margin-right: 5px;
+            margin-left: 5px;
+            text-align: left;
+            background-color :rgba(44, 42, 42, 0.666);
+            border-radius: 5px;
+            padding: 5px 12px;
+            user-select: none; 
+            width: fit-content;
+            float: left;
+            position: relative;
+        }
+        .hiddenDiv{
+            display: none;
+        }
+        .elegantDiv{
+            border:none;
+            margin-top: 7px;
+            margin-left:  7px;
+        }
+
+
+
+
+
+        .networkContent{
+            border: 1px solid rgba(67, 66, 66, 0.761);
+            margin-top: 7px;
+            margin-bottom: 7px;
+            margin-right: 5px;
+            margin-left: 5px;
+            text-align: left;
+            background-color :rgba(44, 42, 42, 0.666);
+            border-radius: 5px;
+            padding: 5px 12px;
+            padding-bottom: 3px;
+            user-select: none;
+            height: 35.5px; 
+        }
+
+
+        .signalLevel1{
+            float: left;
+            margin-top: 13px;
+            margin-bottom: 3px;
+            margin-right: 1px;
+            border: 1px solid rgba(67, 66, 66, 0.761);
+            width: 3.5px;
+            height: 3px;
+            background-color :rgba(44, 42, 42, 0.666);
+        }
+        .signalLevel2{
+            float: left;
+            margin-top: 9px;
+            margin-bottom: 3px;
+            margin-right: 1px;
+            border: 1px solid rgba(67, 66, 66, 0.761);
+            width: 3.5px;
+            height: 7px;
+            background-color :rgba(44, 42, 42, 0.666);
+        }
+        .signalLevel3{
+            float: left;
+            margin-top: 5px;
+            margin-bottom: 3px;
+            margin-right: 1px;
+            border: 1px solid rgba(67, 66, 66, 0.761);
+            width: 3.5px;
+            height: 11px;
+            background-color :rgba(44, 42, 42, 0.666);
+        }
+        .signalLevel4{
+            float: left;
+            margin-top: 1px;
+            margin-bottom: 3px;
+            margin-right: 15px;
+            border: 1px solid rgba(67, 66, 66, 0.761);
+            width: 3.5px;
+            height: 15px;
+            background-color :rgba(44, 42, 42, 0.666);
+        }
+
+
+        .signalState{
+            float: left;
+            width: fit-content;
+            height: fit-content;
+            display: block;
+            margin-top: 2.5px;
+        }
+        
+        .networkSSID{
+            float: left;
+        }
+
+        .scanButton{
+            border: 1px solid rgba(67, 66, 66, 0.761);
+            margin-top: 5px;
+            margin-bottom: 7px;
+            margin-right: 5px;
+            margin-left: 5px;
+            text-align: right;
+            border-radius: 15px;
+            padding: 5px 12px;
+            user-select: none; 
+            font-weight: bold;
+            /* padding-right: 10px; */
+        }
+
+        .showNetworks{
+            border: 1px solid rgba(67, 66, 66, 0.761);
+            margin-top: 5px;
+            margin-bottom: 7px;
+            margin-right: 5px;
+            margin-left: 5px;
+            height: 250px;
+            border-radius: 5px;
+            overflow: scroll;
+        }
+        .plotter{
+            /*border: 1px solid rgba(67, 66, 66, 0.761);*/
+            margin-top: 5px;
+            margin-bottom: 5px;
+            margin-right: 5px;
+            margin-left: 5px;
+
+            overflow:scroll;
+            overflow-y:hidden;
+        }
+        .containerLogicAnalizer{
+           
+            margin-left: -1px;
+           
+            width:100%;
+            overflow:scroll;
+            overflow-y:hidden;
+        }
+        .noBoarder{
+            margin-top: -1px;
+            margin-bottom: -1px;
+            margin-left: -1px;
+            margin-right: -1px;
+        }
+        .colorIndicator{
+            margin-top: 7px;
+            margin-bottom: 3px;
+            margin-left: 7px;
+            /*margin-right: 500px;*/
+            width:10px;
+            height:10px;
+            float:left;
+        }
+        .consoleDiv{
+            
+            border: 1px solid rgba(67, 66, 66, 0.761);
+            margin-top: 5px;
+            margin-bottom: 5px;
+            margin-right: 5px;
+            margin-left: 5px;
+
+            background-color :black;
+            color:#00FF00;
+            word-wrap: break-word;
+            
+            height: 250px;
+            overflow:scroll;
+            overflow-x:hidden;
+            scrollbar-color:black;
+        }
+
+        .serialConsoleSend{
+            margin-bottom: 5px;
+            margin-top: 5px;
+            margin-left: 5px;
+            margin-right: 5px;
+            border-radius: 5px;
+            
+            border: 1px solid rgba(67, 66, 66, 0.761);
+            height: 80px;
+            
+            
+        }
+
+        .mainSerialTextInput{
+            width: 99%;
+            border-radius: 5px;
+            border: 1px solid rgba(67, 66, 66, 0.761);
+            margin-bottom: 5px;
+            margin-top: 5px;
+            margin-left: 0.5%;
+            margin-right: 0.5%;
+            padding-left: 10px;
+            background-color:black;
+            color: gray;
+            outline: none;
+           /* caret-color: ;*/
+            font-size: 18px;
+          /*  font-family: monospace;*/
+        }
+
+        .serialUserInputSelect{
+            border-radius: 5px;
+            padding-left: 0px;
+            padding-right: 0px;
+            outline: none;
+            font-size: 18px;
+            text-align: center;
+        }
+
+        .quadChannelSerialConsole{
+            margin-bottom: 5px;
+            margin-top: 5px;
+            margin-left: 5px;
+            margin-right: 5px;
+            border-radius: 5px;
+            
+            border: 1px solid rgba(67, 66, 66, 0.761);
+            
+            
+            
+        }
+
+        .quadChannelSerialInput{
+            margin-bottom: 5px;
+            margin-top: 5px;
+            margin-left: 5px;
+            margin-right: 5px;
+            border-radius: 5px;
+            
+            border: 1px solid #ff8c1a;
+            color:#ff8c1a;
+            outline: none;
+            background-color: black;
+            min-height: 170px;
+            height: calc((100% - 149px)/4);
+
+            font-size: 14px;
+            overflow:scroll;
+            overflow-x:scroll;
+            scrollbar-color:black;
+            padding-left: 5px;
+            padding-right: 5px;
+        }
+        .tryStateButton{
+            margin-top: 1px;
+            margin-bottom: 1px;
+            margin-left: 1px;
+            margin-right: 1px;
+            border-radius: 10px;
+            float: left;
+
+            user-select: none;
+            height: 30px;
+            width: 30px;
+            background-color: black;
+            border:  1px solid rgba(67, 66, 66, 0.761);
+        }
+        .tryStateButton:active{
+            background-color: rgba(255, 140, 26, 0.1);
+        }
+        .tryStateButton:hover{
+            /* background-color: rgba(255, 140, 26, 0.4); */
+        }
+
+
+        .userControllerHorizontalIdentifier{
+            float: left;
+            text-align: center;
+            margin-right: 19px;
+            font-size: 20px;
+            font-weight: bold;
+        }
+        .userControllerVerticalIdentifier{
+            float: right;
+            text-align: center;
+            margin-top: 2px;
+            font-size: 20px;
+            font-weight: bold;
+        }
+
+    </style>
+    <style>                         /* customised bootstrap elements*/
+        .btn-outline-special {
+            padding: 0px 13px;
+            padding-bottom: 3px;
+            padding-left: 3px;
+            padding-right: 3px;
+            text-align: center ;
+            font-size:18px;
+            color: white;
+            border-color: #ff8c1a;
+            border-radius: 5px;
+            background-color:#ff8c1a;
+            outline: none;
+            /* font-weight: bold; */
+        }
+        .btn-outline-special:hover {
+            color: white;
+            background-color: rgba(255, 140, 26, 0.8);
+            border-color: #ff8c1a;
+        }
+        .btn-check:focus + .btn-outline-special, .btn-outline-special:focus {
+            box-shadow: none;
+        }
+        .btn-check:checked + .btn-outline-special, .btn-check:active + .btn-outline-special, .btn-outline-special:active, .btn-outline-special.active, .btn-outline-special.dropdown-toggle.show {
+            color: white;
+            background-color: rgba(255, 140, 26, 0.5);
+            border-color: #ff8c1a;
+        }
+        .btn-check:checked + .btn-outline-special:focus, .btn-check:active + .btn-outline-special:focus, .btn-outline-special:active:focus, .btn-outline-special.active:focus, .btn-outline-special.dropdown-toggle.show:focus {
+            box-shadow: none;
+        }
+        .btn-outline-special:disabled, .btn-outline-special.disabled {
+            color: white;
+            background-color: transparent;
+        }
+
+
+
+
+
+        .form-check .form-check-inputSpecial {
+        float: left;
+        margin-left: -1.5em;
+        }
+
+        .form-check-inputSpecial {
+        width: 1em;
+        height: 1em;
+        margin-top: 0.25em;
+        vertical-align: top;
+        background-color: #fff;
+        background-repeat: no-repeat;
+        background-position: center;
+        background-size: contain;
+        border: 1px solid rgba(0, 0, 0, 0.25);
+        -webkit-appearance: none;
+        -moz-appearance: none;
+        appearance: none;
+        -webkit-print-color-adjust: exact;
+        color-adjust: exact;
+        }
+        .form-check-inputSpecial[type=checkbox] {
+        border-radius: 0.25em;
+        }
+        .form-check-inputSpecial[type=radio] {
+        border-radius: 50%;
+        }
+        .form-check-inputSpecial:active {
+        filter: brightness(90%);
+        }
+        .form-check-inputSpecial:focus {
+        border-color: #ff8c1a;
+        outline: 0;
+        box-shadow: 0 0 0 0.25rem rgba(255, 140, 26, 0.25);
+        }
+        .form-check-inputSpecial:checked {
+        background-color: #ff8c1a;
+        border-color: #ff8c1a;
+        }
+        .form-check-inputSpecial:checked[type=checkbox] {
+        background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20'%3e%3cpath fill='none' stroke='%23fff' stroke-linecap='round' stroke-linejoin='round' stroke-width='3' d='M6 10l3 3l6-6'/%3e%3c/svg%3e");
+        }
+        
+        .form-check-inputSpecial[type=checkbox]:indeterminate {
+        background-color: #ff8c1a;
+        border-color: #ff8c1a;
+        background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20'%3e%3cpath fill='none' stroke='%23fff' stroke-linecap='round' stroke-linejoin='round' stroke-width='3' d='M6 10h8'/%3e%3c/svg%3e");
+        }
+        .form-check-inputSpecial:disabled {
+        pointer-events: none;
+        filter: none;
+        opacity: 0.5;
+        }
+        .form-check-inputSpecial[disabled] ~ .form-check-label, .form-check-inputSpecial:disabled ~ .form-check-label {
+        opacity: 0.5;
+        }
+
+        .form-switch {
+        padding-left: 2.5em;
+        }
+        .form-switch .form-check-inputSpecial {
+        width: 2em;
+        margin-left: -2.5em;
+        background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='-4 -4 8 8'%3e%3ccircle r='3' fill='%23ff8c1a'/%3e%3c/svg%3e");
+        background-position: left center;
+        border-radius: 2em;
+        transition: background-position 0.15s ease-in-out;
+        }
+        @media (prefers-reduced-motion: reduce) {
+        .form-switch .form-check-inputSpecial {
+            transition: none;
+        }
+        }
+        .form-switch .form-check-inputSpecial:focus {
+        background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='-4 -4 8 8'%3e%3ccircle r='3' fill='%23ff8c1a'/%3e%3c/svg%3e");
+        }
+        .form-switch .form-check-inputSpecial:checked {
+        background-position: right center;
+        background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='-4 -4 8 8'%3e%3ccircle r='3' fill='%23fff'/%3e%3c/svg%3e");
+        }
+    </style>
+    <body>
+        <div class="mainView">
+            <div class="selectionDiv" id="appSelector">
+
+
+                <div class="subContent" id="device status" style="float: right; ">
+                    <strong>DISCONNECTED</strong>
+                </div>
+
+                <div style="max-width: calc( 100% - 130px); overflow: scroll;">
+                    <div style="width: max-content;  " id="dummyNav">
+                        <div class="subContent" id="option 1" onclick="divSelect(this)">
+                            <strong>Wi-Fi</strong>
+                        </div>
+                        <div class="subContent" id="option 2" onclick="divSelect(this)">
+                            <strong>Network</strong>
+                        </div>
+                        <div class="subContent" id="option 3" onclick="divSelect(this)">
+                            <strong>Logic Analyzer</strong>
+                        </div>
+                        <div class="subContent" id="option 5" onclick="divSelect(this)">
+                            <strong>Serial Port</strong>
+                        </div>
+                        <div class="subContent" id="option 6" onclick="divSelect(this)">
+                            <strong>GPIO</strong>
+                        </div>
+                        <div class="subContent" id="option 4" onclick="divSelect(this)">
+                            <strong>Console Log</strong>
+                        </div>
+                    </div>
+                </div>
+
+
+                
+                
+            </div>
+            <div class="contentDiv" id="userView"></div>
+
+            <div class="hiddenDiv" id="signal-level-0">
+                <div class="signalState">
+                    <div class="signalLevel1"></div>
+                    <div class="signalLevel2"></div>
+                    <div class="signalLevel3"></div>
+                    <div class="signalLevel4"></div>
+                </div>
+            </div>
+            <div class="hiddenDiv" id="signal-level-1">
+                <div class="signalState">
+                    <div class="signalLevel1" style="background-color: #ff8c1a;"></div>
+                    <div class="signalLevel2"></div>
+                    <div class="signalLevel3"></div>
+                    <div class="signalLevel4"></div>
+                </div>
+            </div>
+            <div class="hiddenDiv" id="signal-level-2">
+                <div class="signalState">
+                    <div class="signalLevel1" style="background-color: #ff8c1a;"></div>
+                    <div class="signalLevel2" style="background-color: #ff8c1a;"></div>
+                    <div class="signalLevel3"></div>
+                    <div class="signalLevel4"></div>
+                </div>
+            </div>
+            <div class="hiddenDiv" id="signal-level-3">
+                <div class="signalState">
+                    <div class="signalLevel1" style="background-color: #ff8c1a;"></div>
+                    <div class="signalLevel2" style="background-color: #ff8c1a;"></div>
+                    <div class="signalLevel3" style="background-color: #ff8c1a;"></div>
+                    <div class="signalLevel4" ></div>
+                </div>
+            </div>
+            <div class="hiddenDiv" id="signal-level-4">
+                <div class="signalState">
+                    <div class="signalLevel1" style="background-color: #ff8c1a;"></div>
+                    <div class="signalLevel2" style="background-color: #ff8c1a;"></div>
+                    <div class="signalLevel3" style="background-color: #ff8c1a;"></div>
+                    <div class="signalLevel4" style="background-color: #ff8c1a;"></div>
+                </div>
+            </div>
+
+
+            <div class="contentDiv" id="option 1div">                           <!--oprtion 1-->
+                <div class="scanButton">
+                    <div style="float: left; margin-top: 2px; font-size: larger; margin-left: 10px;">Wi-Fi Network</div>
+                    <button class="btn btn-outline-special" onclick="getAvailableNetworks()"><strong>start scan</strong></button>
+                </div>
+
+                <div id="showNetworks" class="showNetworks">
+
+                  
+                
+                </div>
+
+
+                <div class="elegantDiv">
+                    <span>Wi-Fi</span>
+                    <br>
+                    <input type="text" id="finalNetwork" placeholder="SSID">
+                    <br><br>
+                    <span>Password</span>
+                    <br>
+                    <input type="password" id="finalPassword" placeholder="password">
+                    <button class="btn btn-outline-special" onclick="connectToFianlNetwork()"><strong>connect</strong></button>
+                    <br>
+                    <span>show password</span>
+                    <input class="form-check-inputSpecial" type="checkbox" onchange="showUserPassword(this)">
+                </div>
+
+
+            </div>
+
+            
+
+            <div class="contentDiv" id="option 2div">                           <!--oprtion 2-->
+                <div class="elegantDiv">
+                    <span>
+                        Check for device IP or URL
+                    </span>
+                    <br>
+                    <input type="text" name="" id="userAddress" placeholder="IP address">
+                    <button class="btn btn-outline-special" onclick="userScanForIP()">
+                        <strong>SCAN</strong>
+                    </button>
+                    <br>
+                    <span>
+                        note : <br> if you left the field above empty an <br> automatic scan will occur which <br>only works in local network <br><br> you will find a wifi access point <br> with the device IP address 
+                    </span>
+                    <br><br>
+                    <span style="color: darkgray;" id="scanning-state"></span>
+                    <br>
+                    
+                <span>
+                    
+                </span>
+                <div style="display: none;">
+                    <a id="linkerServerConfigDownload"></a>
+                    <input type="file" accept="application/json" id="linkerServerConfigUpload">
+                </div>
+                <button class="btn btn-outline-special" onclick="linkDeviceToServer()"><strong>Link Device</strong></button>
+                <br><br>
+                <button class="btn btn-outline-special" onclick="makeCluster()"><strong>make cluster</strong></button>
+                <br><br>
+                <button class="btn btn-outline-special" onclick="downloadLinkerServerConfig()"><strong>Save settings</strong></button>
+                <br><br>
+                <button class="btn btn-outline-special" onclick="uploadLinkerServerConfig()"><strong>Load settings</strong></button>
+                </div>
+                <script>
+
+                    function downloadLinkerServerConfig(){
+                        if(getJson(localStorage.getItem("linkerServerConfig"))==undefined)
+                            return;
+
+                        var fileData= "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify({
+                            fileSingnature:"Sk9ITiBLSEFMSUw=",
+                            payload:localStorage.getItem("linkerServerConfig")
+                        }));
+                        var linkerServerConfigDownload=document.getElementById("linkerServerConfigDownload");
+                        linkerServerConfigDownload.href=fileData;
+                        linkerServerConfigDownload.download="linkerServerConfig "+getLocalTime()+".json";
+                        linkerServerConfigDownload.click();
+                    }
+
+                    function uploadLinkerServerConfig(){
+                        document.getElementById("linkerServerConfigUpload").click();
+                    }
+
+                    document.getElementById("linkerServerConfigUpload").onchange=(linkerServerConfigUserFile)=>{
+                        try{
+                            if(linkerServerConfigUserFile.target.files.length){
+                                jsonFile=linkerServerConfigUserFile.target.files[0];
+                                var fileReader=new FileReader;
+                                fileReader.onload=loadedFile=>{
+                                    //console.log("uploadedFileContent",loadedFile.target.result);
+                                    var linkerServerConfigFileObject= JSON.parse(loadedFile.target.result);
+                                    if((linkerServerConfigFileObject.fileSingnature=="Sk9ITiBLSEFMSUw=")&&(getJson(linkerServerConfigFileObject.payload)!=undefined)){      //basic validation
+                                        localStorage.setItem("linkerServerConfig",linkerServerConfigFileObject.payload);
+                                    }
+                                    else{
+                                        alert("invalid file");
+                                    }
+                                        
+                                }
+                                fileReader.readAsText(jsonFile);
+                            }
+                        }
+                        catch(errorUploadFile){
+
+                        }
+                    }
+                </script>
+                <script>
+                    function stringToArray(inputString){
+                        var inputStringLength=inputString.length;
+                        var arrayIndexCounter=0;
+                        var finalArray=[];
+                        while(inputStringLength--)
+                            finalArray[arrayIndexCounter]=inputString.charCodeAt(arrayIndexCounter++);
+                        return finalArray;
+                    }
+                    function arrayToString(inputArray){
+                        var inputArrayLength=inputArray.length;
+                        var stringIndexCounter=0;
+                        var finalString="";
+                        while(inputArrayLength--)
+                            finalString+=String.fromCharCode(inputArray[stringIndexCounter++]);
+                        return finalString;
+                    }
+                </script>
+                <script>
+                    function dataMask(dataArray,keyArray){
+                        for(var maskCounter=0;maskCounter<dataArray.length;maskCounter++)
+                            dataArray[maskCounter]^=keyArray[maskCounter%keyArray.length];
+                        return dataArray;
+                    }
+                    function stringMask(dataStr,keyStrBase64){
+                        return arrayToString(dataMask(stringToArray(dataStr),stringToArray(atob(keyStrBase64))));
+                    }
+                    function getJson(jsonStr){
+                        try{
+                            JSON.parse(jsonStr);
+                        }
+                        catch(err){
+                            return undefined;
+                        }
+                        return JSON.parse(jsonStr);
+                    }
+                    function base64Decode(base64UserText){
+                        try{
+                            atob(base64UserText);
+                        }
+                        catch(err){
+                            return "undefined";
+                        }
+                        return atob(base64UserText);
+                    }
+                    function newUser(){
+                       return Math.random().toString(36).substring(2,11);    
+                    }
+                    function newKey(){
+                        var encKeyArrayForm=[];
+                        for(var encKeyCounter=0;encKeyCounter<8;encKeyCounter++)
+                            encKeyArrayForm[encKeyCounter]=Math.ceil(Math.random()*0xff);
+                        return btoa(arrayToString(encKeyArrayForm));
+                    }
+                    
+                    // var randomKey=newKey();
+                    // var testData="string";
+                    // testData=stringMask(testData,randomKey);
+                    // console.log("enc >> ",testData);
+                    // testData=stringMask(testData,randomKey);
+                    // console.log("raw >> ",testData);
+
+                    function linkDeviceToServer(){
+                        fetch('http://'+localStorage.getItem("IP_ADDRESS"),{
+                            method:"POST",
+                            body:"data:"+JSON.stringify({
+                                instruction:32
+                            })+"<@>"
+                        })
+                        .then(textResponse=>textResponse.text())
+                        .then(xtensaConfig=>{
+                            xtensaConfig=getJson(xtensaConfig)
+                            fetch("https://raw.githubusercontent.com/engkhalil/xtensa32plus/main/dnsSquared.json")
+                            .then(jsonResponse=>jsonResponse.json())
+                            .then(dnsConfig=>{
+                                var xtensaPort=dnsConfig.xtensa.slice(dnsConfig.xtensa.search(':')+1);
+                                var xtensaDomainName=dnsConfig.xtensa.slice(0,dnsConfig.xtensa.search(':'));
+                                // console.log("\ttest xtensa config >> ",xtensaPort);
+                                // console.log("\ttest xtensa config >> ",xtensaDomainName);
+                                if((xtensaConfig==undefined)||(xtensaConfig.U==undefined)||(xtensaConfig.K==undefined)){  //setConfig
+                                    fetch('http://'+localStorage.getItem("IP_ADDRESS"),{
+                                        method:"POST",
+                                        body:"data:"+JSON.stringify({
+                                            instruction:32,
+                                            serverData:{
+                                                D: xtensaDomainName,
+                                                K:newKey(),
+                                                P: parseInt(xtensaPort),
+                                                U:{
+                                                    auth:newUser()
+                                                }
+                                            }
+                                        })+"<@>"
+                                    })
+                                    .then(jsonResponse=>jsonResponse.json())
+                                    .then(finalConfig=>{
+                                        localStorage.setItem("linkerServerConfig",JSON.stringify({
+                                            dnsSquared:dnsConfig,
+                                            userCredentials:finalConfig.U,
+                                            encryptionKey:finalConfig.K
+                                        }));
+                                    });
+                                }
+                                else{   //get config
+                                    localStorage.setItem("linkerServerConfig",JSON.stringify({
+                                        dnsSquared:dnsConfig,
+                                        userCredentials:xtensaConfig.U,
+                                        encryptionKey:xtensaConfig.K
+                                    }));
+                                }
+                                if((xtensaConfig.D!=xtensaDomainName)||(xtensaConfig.P!=xtensaPort)){
+                                    xtensaConfig.D=xtensaDomainName;
+                                    xtensaConfig.P=parseInt(xtensaPort);
+                                    fetch('http://'+localStorage.getItem("IP_ADDRESS"),{
+                                        method:"POST",
+                                        body:"data:"+JSON.stringify({
+                                            instruction:32,
+                                            serverData:xtensaConfig
+                                        })+"<@>"
+                                    });
+                                }
+                            });
+                            
+                        });
+                    }
+                    
+                    function makeCluster(){
+                        console.log(JSON.parse(localStorage.getItem("linkerServerConfig")));
+                        var linkerServerConfig=JSON.parse(localStorage.getItem("linkerServerConfig"));
+                        if(linkerServerConfig!=null){
+                            var xtensaPort=linkerServerConfig.dnsSquared.xtensa.slice(linkerServerConfig.dnsSquared.xtensa.search(':')+1);
+                            var xtensaDomainName=linkerServerConfig.dnsSquared.xtensa.slice(0,linkerServerConfig.dnsSquared.xtensa.search(':'));
+                            fetch('http://'+localStorage.getItem("IP_ADDRESS"),{
+                                method:"POST",
+                                body:"data:"+JSON.stringify({
+                                    instruction:32,
+                                    serverData:{
+                                        D: xtensaDomainName,
+                                        K:linkerServerConfig.encryptionKey,
+                                        P: parseInt(xtensaPort),
+                                        U:linkerServerConfig.userCredentials
+                                    }
+                                })+"<@>"
+                            });
+                        }
+                    }
+
+                </script>
+                <script>
+                    var LINKER_SERVER=null;
+                    function linkerServerConnect(){
+                        try {
+                            if(localStorage.getItem("linkerServerConfig")!=null){
+                                var linkerServerConfig=JSON.parse(localStorage.getItem("linkerServerConfig"));
+                                LINKER_SERVER=new WebSocket("ws://"+linkerServerConfig.dnsSquared.dev);
+                                LINKER_SERVER.onopen=()=>{
+                                    LINKER_SERVER.send(JSON.stringify(linkerServerConfig.userCredentials));
+                                }
+                                LINKER_SERVER.onerror=(serverError)=>{
+                                    LINKER_SERVER=null;
+                                    console.error(serverError);
+                                }
+                                LINKER_SERVER.onmessage=(cipherText)=>{
+                                    cipherText=cipherText.data;
+                                    if(cipherText!="Sk9ITiBLSEFMSUw="&&(base64Decode(cipherText)!="undefined"))
+                                        serverHandler(stringMask(base64Decode(cipherText),linkerServerConfig.encryptionKey));
+                                }
+                            }
+                            else
+                                return false;
+                        } catch (error) {
+                            console.error(error);
+                            return false;
+                        }
+                        return true;
+                    }
+                    function serverSend(rawDataToServer,manualServerTime){
+                        if(manualServerTime==undefined)
+                            manualServerTime=Date.now();
+                        try {
+                            if((LINKER_SERVER!=null)&&(localStorage.getItem("linkerServerConfig")!=null)&&(rawDataToServer!=undefined)){
+                                LINKER_SERVER.send(btoa(stringMask(JSON.stringify({
+                                    data:rawDataToServer,
+                                    time:manualServerTime
+                                }),
+                                JSON.parse(localStorage.getItem("linkerServerConfig")).encryptionKey)));
+                            }
+                            else
+                                return false;
+                        } catch (sendError) {
+                            console.error(sendError);
+                            return false;
+                        }
+                        return true;
+                    }
+
+                    var SERVER_MESSAGE_COUNTER=0;
+                    function serverHandler(dataFromServer){
+                        SERVER_MESSAGE_COUNTER++;
+                        console.log("DATA FROM SREVER >> ",dataFromServer);
+                        var recivedDataObject;
+                        if((recivedDataObject=getJson(dataFromServer))!=undefined){
+                            if(recivedDataObject.externalPort!=undefined){
+                                externalPortArray=recivedDataObject.externalPort;
+                                buttonStatus(externalPortArray);
+                                setTimeout(()=>{
+                                    serverSend({
+                                        instruction:128,
+                                        externalPort: externalPortArray
+                                    })
+                                },500);
+                            }
+                        }
+
+                    }
+
+                    linkerServerConnect();
+                    // setTimeout(() => {
+                    //     serverSend({
+                    //         testText:"test101",
+                    //         num:50
+                    //     });
+                    // }, 5000);
+                </script>
+                
+            </div>
+
+            <div class="contentDiv" id="option 3div">                          <!--oprtion 3-->
+
+                <!-- <div class="scanButton" style="text-align: left;  margin-left: 7px; margin-bottom: 5px;"><div style="font-size: 25px;">Quad Channel Logic Analyzer</div></div> -->
+                
+                
+                <div class="containerLogicAnalizer">
+                    <div class="elegantDiv" style="position:sticky;"><strong style="float:left;">CH 0</strong><div class="colorIndicator" style="background-color: dodgerblue; "></div></div><br>
+                    <div class="plotter" id="CH0">
+                        <canvas id="channel-0" width="65535" height="100" class="noBoarder"></canvas>
+                    </div>
+                    <div class="elegantDiv" style="position:sticky;"><strong style="float:left;">CH 1</strong><div class="colorIndicator" style="background-color: #00ff00; "></div></div><br>
+                    <div class="plotter" id="CH1">
+                        <canvas id="channel-1" width="65535" height="100" class="noBoarder"></canvas>
+                    </div>
+                    <div class="elegantDiv" style="position:sticky;"><strong style="float:left;">CH 2</strong><div class="colorIndicator" style="background-color: yellow; "></div></div><br>
+                    <div class="plotter" id="CH2">
+                        <canvas id="channel-2" width="65535" height="100" class="noBoarder"></canvas>
+                    </div>
+                    <div class="elegantDiv" style="position:sticky;"><strong style="float:left;">CH 3</strong><div class="colorIndicator" style="background-color: red; "></div></div><br>
+                    <div class="plotter" id="CH3">
+                        <canvas id="channel-3" width="65535" height="100" class="noBoarder"></canvas>
+                    </div>
+                    <div class="plotter" id="dummy" style="display:none">
+                        <canvas id="channel-dummy" width="65535" height="100" class="noBoarder"></canvas>
+                    </div><br>
+                </div>
+                <div class="elegantDiv">
+
+                    
+
+                    <div style="width: 245px; float: left;">
+                        <div style="float: left; width:240px;">
+                           
+                                <span>Scalling Factor</span>
+                                <br>
+                                <input type="range" class="smartSlider" min="1" max="20" value="9" id="userSelectedScallingFactor" onchange="setAllChannels(logicAnalizerData)"> 
+                                <button class="btn btn-outline-special" onclick="userResetScallingFactor()" style="float:right; margin-top: -10px;"><strong>reset</strong></button><br>
+                                <div style="float: left; margin-top:3px;  font-size: 20px;" id="showScallingFactor">1.0x</div>
+                            
+                        </div>
+                        
+                        <div style="float: left; width:245px; margin-top: 15px;">
+                            <form>
+                                <span style="font-size: 20px;">Sample Size in Bytes</span> 
+                                <div style="float: right; margin-top:15px;  font-size: 20px;" id="showSampleSize"></div>
+                                <br>
+                                <input type="range" class="smartSlider" min="30" max="10200" value="1024" id="userSelectedSampleSize" onchange="displaySampleSize()"> 
+                                
+                            </form>
+                            
+                            <button class="btn btn-outline-special" onclick="logicAnalizer()" ><strong>get sample </strong></button>
+                        </div>
+
+                        <div style="float: left; width:245px; margin-top: 15px;">
+                            <div style="float: left;">
+                                <button class="btn btn-outline-special" onclick="downloadSampleFile()" ><strong>save sample </strong></button>
+                            </div>
+                            <div style="float: right;">
+                                <button class="btn btn-outline-special" onclick="uploadSavedSample()" ><strong>load sample </strong></button>
+                            </div>
+                        </div>
+                        
+                        <div style="float: right; margin-right: 0px; margin-top: 20px; width: 245px; float: left; display: none;" id="MobilePortrait">
+                            <div style="float: left; width:245px">
+                                <div style="float: left;">
+                                    live mode
+                                </div>
+                                <div class="form-check form-switch" style="float: right;">
+                                    <input class="form-check-inputSpecial" type="checkbox" onchange="liveSampleMode(this)">
+                                </div>
+                            </div>
+                            <br>
+                            <div style="float: left; width:245px">
+                                <div style="float: left;">
+                                    sync all channels
+                                </div>
+                                <div class="form-check form-switch" style="float: right;">
+                                    <input class="form-check-inputSpecial" type="checkbox" onchange="scrollAll(this)">
+                                </div>
+                            </div>
+                            <br>
+                            <div style="float: left; width:245px">
+                                <div style="float: left;">
+                                    linear scale
+                                </div>
+                                <div class="form-check form-switch" style="float: right;">
+                                    <input class="form-check-inputSpecial" type="checkbox" onchange="linearScale(this)">
+                                </div>
+                            </div>
+                            <br>
+                            <div style="float: left; width:245px">
+                                <div style="float: left;">
+                                    super speed
+                                </div>
+                                <div class="form-check form-switch" style="float: right;">
+                                    <input class="form-check-inputSpecial" type="checkbox" id="superSpeedMode">
+                                </div>
+                            </div>
+                            <br>
+                        </div>
+
+
+
+
+                    </div>
+
+                    <div style="float: right; margin-right: 0px; margin-top: 20px; width: 168px; float: right;" id="nonMobilePortrait">
+                        <div style="float: left; width:168px">
+                            <div style="float: left;">
+                                live mode
+                            </div>
+                            <div class="form-check form-switch" style="float: right;">
+                                <input class="form-check-inputSpecial" type="checkbox" onchange="liveSampleMode(this)">
+                            </div>
+                        </div>
+                        <br>
+                        <div style="float: left; width:168px">
+                            <div style="float: left;">
+                                sync all channels
+                            </div>
+                            <div class="form-check form-switch" style="float: right;">
+                                <input class="form-check-inputSpecial" type="checkbox" onchange="scrollAll(this)">
+                            </div>
+                        </div>
+                        <br>
+                        <div style="float: left; width:168px">
+                            <div style="float: left;">
+                                linear scale
+                            </div>
+                            <div class="form-check form-switch" style="float: right;">
+                                <input class="form-check-inputSpecial" type="checkbox" onchange="linearScale(this)">
+                            </div>
+                        </div>
+                        <br>
+                        <div style="float: left; width:168px">
+                            <div style="float: left;">
+                                super speed
+                            </div>
+                            <div class="form-check form-switch" style="float: right;">
+                                <input class="form-check-inputSpecial" type="checkbox" id="superSpeedMode">
+                            </div>
+                        </div>
+                        <br>
+                    </div>
+
+                </div>
+                <a id="downloadElement" style="display: none;"></a>
+
+                <input type="file" id="savedSampleFile" style="display: none;" accept="application/json">
+               
+                <script>
+
+                    var autoItemLocation=()=>{
+                        if(window.innerWidth<450){
+                            document.getElementById("nonMobilePortrait").style.display="none";
+                            document.getElementById("MobilePortrait").style.display="block";
+                        }
+                        else{
+                            document.getElementById("nonMobilePortrait").style.display="block";
+                            document.getElementById("MobilePortrait").style.display="none";
+                        }
+                    }
+                    window.addEventListener("resize",autoItemLocation);
+                    window.addEventListener("load",autoItemLocation);
+
+                    const CH0=document.getElementById("channel-0");
+                    const CH1=document.getElementById("channel-1");
+                    const CH2=document.getElementById("channel-2");
+                    const CH3=document.getElementById("channel-3");
+
+                    const highState=25;
+                    const lowState=75;
+                    const textLineHigh=17;
+                    const textLineLow=93;
+
+                    CH0.getContext("2d").strokeStyle = "dodgerblue";
+                    CH0.getContext("2d").font = "13px Arial";
+                    CH1.getContext("2d").strokeStyle = '#00ff00';
+                    CH1.getContext("2d").font = "13px Arial";
+                    CH2.getContext("2d").strokeStyle = 'yellow';
+                    CH2.getContext("2d").font = "13px Arial";
+                    CH3.getContext("2d").strokeStyle = 'red';
+                    CH3.getContext("2d").font = "13px Arial";
+
+                    function clearGraph(canvasElement){
+                        graph=canvasElement.getContext("2d");
+                        graph.beginPath();
+                        graph.rect(0, 0, canvasElement.width, canvasElement.height);
+                        graph.fillStyle = "black";
+                        graph.fill();
+                    }
+
+                    clearGraph(CH0);
+                    clearGraph(CH1);
+                    clearGraph(CH2);
+                    clearGraph(CH3);
+
+                    var dataCH0=[0];
+                    var dataCH1=[0];
+                    var dataCH2=[0];
+                    var dataCH3=[0];
+
+                    var channelSync0=0;
+                    var channelSync1=0;
+                    var channelSync2=0;
+                    var channelSync3=0;
+
+                    var scallingFactor=1;
+                    var nonLinearScale=1;
+
+                    function drawSample(arrayData,canvasElement){
+                        var syncSignal=0;
+                        if(canvasElement==CH0){
+                            dataCH0=arrayData;
+                            syncSignal=channelSync0;
+                        }
+                        if(canvasElement==CH1){
+                            dataCH1=arrayData;
+                            syncSignal=channelSync1;
+                        }
+                        if(canvasElement==CH2){
+                            dataCH2=arrayData;
+                            syncSignal=channelSync2;
+                        }
+                        if(canvasElement==CH3){
+                            dataCH3=arrayData;
+                            syncSignal=channelSync3;
+                        }
+                        
+
+                        if(arrayData==null)
+                                return;
+
+                        clearGraph(canvasElement);
+                        var graph=canvasElement.getContext("2d");
+                        var deltaX=10+(syncSignal*scallingFactor);
+                        var lastState=lowState;
+                        graph.moveTo(0,lowState);
+                        graph.lineTo(deltaX,lowState);
+                        graph.stroke();
+                        var arrayDataLenght=0;
+                        while(arrayData[arrayDataLenght]!=undefined)
+                            arrayDataLenght++;
+                        console.log("array data >> ",arrayData);
+                        console.log("array data lenght >> ",arrayDataLenght);
+
+                        
+                        const maxGraphPixels=200;
+
+                        for(var counter=0;counter<arrayDataLenght;counter++){
+                            var timerLimit=1;
+                            if((deltaX+(arrayData[counter]*scallingFactor))>canvasElement.width){
+                                if((deltaX+maxGraphPixels)>canvasElement.width)
+                                    break;
+                                timerLimit=0;
+                                arrayData[counter]=maxGraphPixels/scallingFactor;
+                            }
+                                
+                            if(lastState==lowState){
+                                graph.moveTo(deltaX,lowState);
+                                graph.lineTo(deltaX,highState);
+                                graph.stroke();
+                                lastState=highState;
+                            }
+                            else if(lastState==highState){
+                                graph.moveTo(deltaX,highState);
+                                graph.lineTo(deltaX,lowState);
+                                graph.stroke();
+                                lastState=lowState;
+                            }
+                            var lastFillStyle=graph.fillStyle;
+                            graph.fillStyle="#f1f1f1";
+                            if(timerLimit){
+                                if(lastState==highState)
+                                    graph.fillText(arrayData[counter],deltaX,textLineHigh);
+                                else
+                                    graph.fillText(arrayData[counter],deltaX,textLineLow);
+                            }
+                            graph.fillStyle=lastFillStyle;
+                            graph.moveTo(deltaX,lastState);
+                            if(nonLinearScale&&((arrayData[counter]*scallingFactor)>maxGraphPixels)){
+                                deltaX+=maxGraphPixels;
+                            }
+                            else{
+                                deltaX+=(arrayData[counter]*scallingFactor);
+                            }
+                            graph.lineTo(deltaX,lastState);
+                            graph.stroke();
+                        }
+                        graph.lineTo(deltaX,lastState);
+                        graph.stroke();
+                    }
+                    
+
+                    function setSuperSpeedChannel(dataFrame,channelNumber){
+                        var superSpeedData=[0];
+                        var activeChannel=0;
+                        var lastBitState=1;
+                        var channelDataCounter=0;
+                        for(var stageCounter=0;stageCounter<2;stageCounter++){
+                            for(var dataFrameCounter=0;dataFrameCounter<dataFrame.length;dataFrameCounter++){
+                                var currentBitState=((dataFrame[dataFrameCounter]&((16<<channelNumber)>>(4*stageCounter)))!=0);
+                                if(currentBitState)
+                                    activeChannel=1;
+                                if(activeChannel){
+                                    if(currentBitState!=lastBitState){
+                                        lastBitState=currentBitState;
+
+                                        var superSpeedScallingFactor;
+                                        if(!stageCounter)
+                                            superSpeedScallingFactor=1/4.25;
+                                        else if(stageCounter==1)
+                                            superSpeedScallingFactor=1/3.25;
+                                        superSpeedData[channelDataCounter]=Math.round((superSpeedData[channelDataCounter]*superSpeedScallingFactor)*100)/100;
+
+                                        channelDataCounter++;
+                                        superSpeedData[channelDataCounter]=0;
+                                    }
+                                    superSpeedData[channelDataCounter]++;
+                                }
+                            }
+                        }
+                        return superSpeedData;
+                    }
+
+
+
+                    function setChannel(compressedFrame,channelNumber){
+                        var channelData=[0];
+                        var channelDataCounter=0;
+                        var stateTime=0;
+                        var backGroundThreadsErrorCounter=0;
+                        for(var frameLength=0;frameLength<compressedFrame.length;frameLength++){
+                            var inputState=compressedFrame[frameLength]&0x0F;
+                            var sampleLength=compressedFrame[frameLength]>>4;
+                            var totalTime=0;
+                            while(sampleLength&&frameLength<compressedFrame.length){
+                                totalTime=totalTime<<8;
+                                frameLength++;
+                                sampleLength--;
+                                totalTime+=compressedFrame[frameLength];
+                            }
+
+                            backGroundThreadsErrorCounter+=totalTime;
+                            var lowFrequenyAccuracy=Math.floor(totalTime/65535)*6;
+                            backGroundThreadsErrorCounter*=(totalTime<65536);
+                            totalTime*=timeScallingFactor(totalTime);
+                            totalTime=Math.round((totalTime+2)*10)/10;
+                            if(backGroundThreadsErrorCounter>65535){
+                                backGroundThreadsErrorCounter=0;
+                                totalTime+=6;
+                            }
+                            totalTime+=lowFrequenyAccuracy;
+
+
+                            var logicHigh=((inputState&(1<<channelNumber))!=0);
+                            if(logicHigh){
+                                stateTime=totalTime;
+                                var lastState=1;
+                                frameLength++;
+                                while(frameLength<compressedFrame.length){//<=
+                                    inputState=compressedFrame[frameLength]&0x0F;
+                                    sampleLength=compressedFrame[frameLength]>>4;
+                                    totalTime=0;
+                                    while(sampleLength&&frameLength<compressedFrame.length){
+                                        totalTime=totalTime<<8;
+                                        frameLength++;
+                                        sampleLength--;
+                                        totalTime+=compressedFrame[frameLength];
+                                    }
+
+                                    backGroundThreadsErrorCounter+=totalTime;
+                                    var lowFrequenyAccuracy=Math.floor(totalTime/65535)*6;
+                                    backGroundThreadsErrorCounter*=(totalTime<65536);
+                                    totalTime*=timeScallingFactor(totalTime);
+                                    totalTime=Math.round((totalTime+2)*10)/10;
+                                    if(backGroundThreadsErrorCounter>65535){
+                                        backGroundThreadsErrorCounter=0;
+                                        totalTime+=6;
+                                    }
+                                    totalTime+=lowFrequenyAccuracy;
+
+                                    logicHigh=((inputState&(1<<channelNumber))!=0);
+                                    if(logicHigh!=lastState){
+                                        lastState=logicHigh;
+                                        channelData[channelDataCounter]=stateTime;
+                                        channelDataCounter++;
+                                        stateTime=totalTime;
+                                    }
+                                    else{
+                                        stateTime+=totalTime;
+                                    }
+                                    frameLength++;
+                                }
+                            }
+                        }
+                        channelData[channelDataCounter]=stateTime;
+                        return channelData;
+                    }
+
+                    function setScallingFactor(){
+                        var allChannelsData=[dataCH0,dataCH1,dataCH2,dataCH3];
+                        var totalSignalTime=[0,0,0,0];
+                        var smallestTimeInterval=0xFFFFFFFFFFFFFFFF;
+                        for(var channelsCounter=0;channelsCounter<4;channelsCounter++){
+                            var inputChannel=allChannelsData[channelsCounter];
+                            for(var channelDataCounter=0;channelDataCounter<inputChannel.length;channelDataCounter++){
+                                if(inputChannel[channelDataCounter]<smallestTimeInterval&&inputChannel[channelDataCounter]!=0){
+                                    smallestTimeInterval=inputChannel[channelDataCounter];
+                                }
+                                totalSignalTime[channelsCounter]+=inputChannel[channelDataCounter];
+                            }
+                        }
+                        scallingFactor=(smallestTimeInterval.toString().length*document.getElementById("userSelectedScallingFactor").value)/smallestTimeInterval;
+                        document.getElementById("showScallingFactor").innerHTML=(Math.round(scallingFactor*100)/100)+"x";
+                        var largestSignalTime=totalSignalTime[0];
+                        for(var channelsCounter=0;channelsCounter<4;channelsCounter++){
+                            if(totalSignalTime[channelsCounter]>largestSignalTime){
+                                largestSignalTime=totalSignalTime[channelsCounter];
+                            }
+                        }
+                        channelSync0=largestSignalTime-totalSignalTime[0];
+                        channelSync1=largestSignalTime-totalSignalTime[1];
+                        channelSync2=largestSignalTime-totalSignalTime[2];
+                        channelSync3=largestSignalTime-totalSignalTime[3];
+                    }
+
+                    
+                    
+
+                    var test=[0x25,0x00,0xff,0x1B,0x94,0x10,0xff,0x25,0x00,0xff,0x11,0xfE,0x10,0xfE,0x11,0x99];
+                    var logicAnalizerData=[];
+                    var sevedFileUserInstruction;
+                    var logicAnalizerSuperSpeedMode=false;
+
+                    var DEFAULT_SCALLING_FACTOR=document.getElementById("userSelectedScallingFactor").value;
+                    function userResetScallingFactor(){
+                        document.getElementById("userSelectedScallingFactor").value=DEFAULT_SCALLING_FACTOR;
+                        setAllChannels(logicAnalizerData);
+                    }
+
+                    function timeScallingFactor(bitTime){
+                        return 1.0/(3.99772-(8.405390763188e-6*(1.0/bitTime)));
+                    }
+
+                    var logicAnalizerDataNeverChanged=logicAnalizerData;
+                    function setAllChannels(rawData){
+                        if(rawData==logicAnalizerDataNeverChanged)
+                            return;
+
+                        if(logicAnalizerSuperSpeedMode){
+                            setAllSuperSpeedChannels(logicAnalizerData);
+                            return;
+                        }
+                        dataCH0=setChannel(rawData,0);
+                        dataCH1=setChannel(rawData,1);
+                        dataCH2=setChannel(rawData,2);
+                        dataCH3=setChannel(rawData,3);
+                        /*
+                        for(var calibratingCounter=0;calibratingCounter<dataCH0.length;calibratingCounter++){
+                            dataCH0[calibratingCounter]*=timeScallingFactor(dataCH0[calibratingCounter]);
+                            dataCH0[calibratingCounter]=Math.round((dataCH0[calibratingCounter]+2)*10)/10;
+                        }
+                       
+                        for(var calibratingCounter=0;calibratingCounter<dataCH1.length;calibratingCounter++){
+                            dataCH1[calibratingCounter]*=timeScallingFactor(dataCH1[calibratingCounter]);
+                            dataCH1[calibratingCounter]=Math.round((dataCH1[calibratingCounter]+2)*10)/10;
+                        }
+
+                        for(var calibratingCounter=0;calibratingCounter<dataCH2.length;calibratingCounter++){
+                            dataCH2[calibratingCounter]*=timeScallingFactor(dataCH2[calibratingCounter]);
+                            dataCH2[calibratingCounter]=Math.round((dataCH2[calibratingCounter]+2)*10)/10;
+                        }
+
+                        for(var calibratingCounter=0;calibratingCounter<dataCH3.length;calibratingCounter++){
+                            dataCH3[calibratingCounter]*=timeScallingFactor(dataCH3[calibratingCounter]);
+                            dataCH3[calibratingCounter]=Math.round((dataCH3[calibratingCounter]+2)*10)/10;
+                        }
+                        //*/
+
+                        setScallingFactor();
+
+                        drawSample(dataCH0,CH0);
+                        drawSample(dataCH1,CH1);
+                        drawSample(dataCH2,CH2);
+                        drawSample(dataCH3,CH3);
+                    }
+                    
+                    function setAllSuperSpeedChannels(rawData){
+                        if(rawData==logicAnalizerDataNeverChanged)
+                            return;
+                        dataCH0=setSuperSpeedChannel(rawData,0);
+                        dataCH1=setSuperSpeedChannel(rawData,1);
+                        dataCH2=setSuperSpeedChannel(rawData,2);
+                        dataCH3=setSuperSpeedChannel(rawData,3);
+                        
+
+                        setScallingFactor();
+
+                        drawSample(dataCH0,CH0);
+                        drawSample(dataCH1,CH1);
+                        drawSample(dataCH2,CH2);
+                        drawSample(dataCH3,CH3);
+                    }
+                    
+
+
+                    function scrollAll(syncScroll){
+                        var originalWidth=document.getElementById("dummy").style.width;
+                        if(syncScroll.checked){
+                            document.getElementById("CH0").style.width="65535px";
+                            document.getElementById("CH1").style.width="65535px";
+                            document.getElementById("CH2").style.width="65535px";
+                            document.getElementById("CH3").style.width="65535px";
+                        }
+                        else{
+                            document.getElementById("CH0").style.width=originalWidth;
+                            document.getElementById("CH1").style.width=originalWidth;
+                            document.getElementById("CH2").style.width=originalWidth;
+                            document.getElementById("CH3").style.width=originalWidth;
+                        }
+                    }
+
+                    function utf8Decode(doubleChar){
+                        if(doubleChar<128)
+                            return doubleChar;
+                        return ((doubleChar&0x3f00)>>3)|(doubleChar&0x1f);
+                    }
+
+                    function base64Table(sixBit){
+                        sixBit-=0x41*((sixBit>0x40)&&(sixBit<0x5A));
+                        sixBit-=0x47*((sixBit>0x18)&&(sixBit<0x33));
+                        sixBit+=0x04*((sixBit>0x2F)&&(sixBit<0x3A));
+                        sixBit+=0x13*(sixBit==0x2B);
+                        sixBit+=0x10*(sixBit==0x2F);
+                        sixBit-=0x3D*(sixBit==0x3D);
+                        return sixBit;
+                    }
+
+                    function base64uint8Array(base64Array){
+                        var uint8FinalArray=[];
+                        var converterCounter=0;
+                        var finalArrayCounter=0;
+                        var base64Headers=0;
+                        while(converterCounter<base64Array.length){
+                            var threeBytes=[base64Table(base64Array[converterCounter++]),base64Table(base64Array[converterCounter++]),base64Table(base64Array[converterCounter++]),base64Table(base64Array[converterCounter++])];
+                            var _24Bits=(threeBytes[0]<<18)|(threeBytes[1]<<12)|(threeBytes[2]<<6)|threeBytes[3];
+                            uint8FinalArray[finalArrayCounter++]=_24Bits>>16;
+                            uint8FinalArray[finalArrayCounter++]=(_24Bits&0xff00)>>8;
+                            uint8FinalArray[finalArrayCounter++]=_24Bits&0xff;
+                            base64Headers+=3;
+                            finalArrayCounter-=3*(base64Headers==21);
+                            base64Headers*=(base64Headers!=21);
+                        }
+                        return uint8FinalArray;
+                    }
+
+                    function logicAnalizer(){
+                        var superSpeedMode=document.getElementById("superSpeedMode").checked;
+                        if(!superSpeedMode){
+                            logicAnalizerSuperSpeedMode=false;
+                            var finalSampleSize=document.getElementById("userSelectedSampleSize").value;
+                            finalSampleSize*=(finalSampleSize!=document.getElementById("userSelectedSampleSize").max);
+                            const xtensaPost="data:"+JSON.stringify({instruction:4,contScan:finalSampleSize})+"<@>";
+                            fetch('http://'+localStorage.getItem("IP_ADDRESS"),{
+                                method:"POST",
+                                body:xtensaPost
+                            })
+                            .then(response => response.arrayBuffer())
+                            .then(xtensaResponse => {
+                                var xtensaData = new Uint8Array(xtensaResponse);
+                                logicAnalizerData=Array.from(xtensaData);
+                                consoleLog(logicAnalizerData);
+                                
+                                setAllChannels(logicAnalizerData);
+                            });
+                        }
+                        else{
+                            logicAnalizerSuperSpeedMode=true;
+                            document.getElementById("userSelectedSampleSize").value=document.getElementById("userSelectedSampleSize").max;
+                            displaySampleSize();
+                            const xtensaPost="data:"+JSON.stringify({instruction:8})+"<@>";
+                            fetch('http://'+localStorage.getItem("IP_ADDRESS"),{
+                                method:"POST",
+                                body:xtensaPost
+                            })
+                            .then(response => response.arrayBuffer())
+                            .then(xtensaResponse => {
+                                var xtensaData = new Uint8Array(xtensaResponse);
+                                logicAnalizerData=Array.from(xtensaData);
+                                console.log("----------superSpeed Data >>> ",logicAnalizerData);
+                                setAllChannels(logicAnalizerData);
+                                
+                            });
+                        }
+                    }
+                   // document.getElementById("superSpeedMode").checked=true;//           just for testing purpos
+                    
+                    var xtensaLiveTCP=null;
+                    function liveSampleMode(enableLiveMode){
+                        if(enableLiveMode.checked){
+                            var finalSampleSize=document.getElementById("userSelectedSampleSize").value;
+                            finalSampleSize*=(finalSampleSize!=document.getElementById("userSelectedSampleSize").max);
+                            const xtensaPost="data:"+JSON.stringify({instruction:4,contScan:finalSampleSize})+"<@>";
+                            xtensaLiveTCP=new WebSocket("ws://"+localStorage.getItem("IP_ADDRESS"));
+                            xtensaLiveTCP.onopen=()=>{
+                                consoleLog("live connection on");
+                                console.log("-----live connection on");
+                                xtensaLiveTCP.send(xtensaPost);
+                            }
+                            xtensaLiveTCP.onmessage=(webSocketMessage)=>{
+                                console.log("-----message event");
+                                webSocketMessage.data.arrayBuffer().then(xtensaUploadedData=>{
+                                    finalSampleSize=document.getElementById("userSelectedSampleSize").value;
+                                    finalSampleSize*=(finalSampleSize!=document.getElementById("userSelectedSampleSize").max);
+                                    
+                                    logicAnalizerData=Array.from(new Uint8Array(xtensaUploadedData));
+                                    logicAnalizerSuperSpeedMode=false;                                  //this line is experimantal after a dubug
+                                    setAllChannels(logicAnalizerData);
+                                    console.log("data >> ",logicAnalizerData);
+                                    xtensaLiveTCP.send("data:"+JSON.stringify({instruction:4,contScan:finalSampleSize})+"<@>");
+                                });
+                                
+                            }
+                            xtensaLiveTCP.onclose=()=>{
+                               enableLiveMode.checked=false; 
+                               consoleLog("live connection closed");
+                            }
+                            xtensaLiveTCP.onerror=(error)=>{
+                                console.log("webSocket error >> ",error);
+                                consoleLog("webSocket error");
+                            }
+                        }
+                        else{
+                            xtensaLiveTCP.close();
+                            consoleLog("live connection closed");
+                        }
+                    }
+
+                    
+                    function linearScale(setLinear){
+                        if(setLinear.checked){
+                            nonLinearScale=0;
+                            setAllChannels(logicAnalizerData);
+                        }
+                        else{
+                            nonLinearScale=1;
+                            setAllChannels(logicAnalizerData);
+                        }
+                    }
+
+                    function displaySampleSize(){
+                        var userSelectedSampleSize=document.getElementById("userSelectedSampleSize").value;
+                        if(userSelectedSampleSize==document.getElementById("userSelectedSampleSize").max)
+                            document.getElementById("showSampleSize").innerHTML="<strong>MAX</strong>";
+                        else
+                            document.getElementById("showSampleSize").innerHTML=userSelectedSampleSize;
+                    }
+                    displaySampleSize();
+
+                    function downloadSampleFile(){
+                        var fileData= "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify({
+                            fileSingnature:"Sk9ITiBLSEFMSUw=",
+                            payloadType:"logicAnalizerData",
+                            logicAnalyzerSuperSpeedMode:logicAnalizerSuperSpeedMode,
+                            payload:logicAnalizerData
+                        }));
+                        var sampleDownloadElement=document.getElementById("downloadElement");
+                        sampleDownloadElement.href=fileData;
+                        sampleDownloadElement.download="signalSample "+getLocalTime()+".json";
+                        sampleDownloadElement.click();
+                    }
+
+                    function uploadSavedSample(){
+                        document.getElementById("savedSampleFile").click();
+                    }
+
+                    document.getElementById("savedSampleFile").onchange=(uploadedFiles)=>{
+                        try{
+                            if(uploadedFiles.target.files.length){
+                                jsonFile=uploadedFiles.target.files[0];
+                                var fileReader=new FileReader;
+                                fileReader.onload=loadedFile=>{
+                                    //console.log("uploadedFileContent",loadedFile.target.result);
+                                    loadSavedSampleFile(JSON.parse(loadedFile.target.result));
+                                }
+                                fileReader.readAsText(jsonFile);
+                            }
+                        }
+                        catch (fileError){
+
+                        }
+                    }
+                    function loadSavedSampleFile(savedSampleObject){
+                        if(savedSampleObject.fileSingnature=="Sk9ITiBLSEFMSUw="){
+                            if(savedSampleObject.payloadType=="logicAnalizerData"){
+                                logicAnalizerData=savedSampleObject.payload;
+                                logicAnalizerSuperSpeedMode=savedSampleObject.logicAnalyzerSuperSpeedMode;
+                                setAllChannels(logicAnalizerData);
+                            }
+                        }
+                        else{
+                            alert("invalid file");
+                        }
+                    }
+
+                </script>
+
+            </div>
+            <div class="contentDiv" id="option 6div">                                                           <!--option 6-->
+                <div class="elegantDiv">
+                    <div style="width: 290px;">
+                        <div style="float: left; width: 20px; margin-top: 27px">
+                            <div class="userControllerVerticalIdentifier">1</div>
+                            <div class="userControllerVerticalIdentifier">2</div>
+                            <div class="userControllerVerticalIdentifier">3</div>
+                            <div class="userControllerVerticalIdentifier">4</div>
+                            <div class="userControllerVerticalIdentifier">5</div>
+                            <div class="userControllerVerticalIdentifier">6</div>
+                            <div class="userControllerVerticalIdentifier">7</div>
+                            <div class="userControllerVerticalIdentifier">8</div>
+                        </div>
+                        <div style="float: right;">
+                            <div style="float: left; margin-left: 9px;">
+                                <div class="userControllerHorizontalIdentifier">A</div>
+                                <div class="userControllerHorizontalIdentifier">B</div>
+                                <div class="userControllerHorizontalIdentifier">C</div>
+                                <div class="userControllerHorizontalIdentifier">D</div>
+                                <div class="userControllerHorizontalIdentifier">E</div>
+                                <div class="userControllerHorizontalIdentifier">F</div>
+                                <div class="userControllerHorizontalIdentifier">G</div>
+                                <div class="userControllerHorizontalIdentifier">H</div>
+                            </div>
+                            <div style=" height: 256 px; width: 256px;" id="dummyCarrier"></div>
+                        </div>
+                    </div>
+                    
+
+
+                    <script>
+                        function createUserController(){
+                            for(var buttonCounter=0;buttonCounter<64;buttonCounter++){
+                                var createNewHtmlElement="<div class=\"tryStateButton\" onclick=\"gpioPress(this)\" id=\"bit-"+buttonCounter+"\"></div>";
+                                document.getElementById("dummyCarrier").innerHTML+=createNewHtmlElement;
+                            }
+                        }
+                        createUserController();
+
+                        function buttonStatus(externalPortData){
+                            if(externalPortData==undefined)
+                                return;
+                            for(var externalPortBitCounter=0;externalPortBitCounter<64;externalPortBitCounter++){
+                                var externalPortBitID="bit-"+externalPortBitCounter;
+                                var bitValue=1<<(externalPortBitCounter%8);
+                                var byteIndex=Math.floor(externalPortBitCounter/8);
+                                if((externalPortData[byteIndex]&bitValue)!=0){
+                                    document.getElementById(externalPortBitID).style.backgroundColor="#ff8c1a";
+                                    document.getElementById(externalPortBitID).style.borderColor="black";
+                                }
+                                else{
+                                    document.getElementById(externalPortBitID).style.backgroundColor="black";
+                                    document.getElementById(externalPortBitID).style.borderColor="#ff8c1a";
+                                }
+                            }
+                        }
+
+                        var externalPortArray=null;
+
+                        function gpioPress(buttonObject){
+                            var idBaseStr="bit-";
+                            var getbButtonID=parseInt(buttonObject.id.slice(idBaseStr.length));
+                            var pressBit=1<<(getbButtonID%8);
+                            var pressIndex=Math.floor(getbButtonID/8);
+                            
+
+                            var getServerTime=Date.now();
+                            try{
+                                fetch('http://'+localStorage.getItem("IP_ADDRESS"),{
+                                    method:"POST",
+                                    body:"data:"+JSON.stringify({
+                                        instruction:64,
+                                        extPrtDirectBit:getbButtonID,
+                                        lastServerTime: getServerTime
+                                    })+"<@>"
+                                })
+                                .then(response => response.text())
+                                .then(xtensaResponse => {
+                                    externalPortArray=JSON.parse(xtensaResponse).externalPort;
+                                    buttonStatus(externalPortArray);
+
+                                    setTimeout(()=>{
+                                        serverSend({
+                                            instruction:128,
+                                            externalPort: externalPortArray
+                                        })
+                                    },500);
+
+                                    // externalPortArray=JSON.parse(xtensaResponse).externalPort;
+                                    // externalPortArray[pressIndex]^=pressBit;
+                                    // fetch('http://'+localStorage.getItem("IP_ADDRESS"),{
+                                    //     method:"POST",
+                                    //     body:"data:"+JSON.stringify({
+                                    //         instruction:64,
+                                    //         lastServerTime: getServerTime,
+                                    //         externalPort: externalPortArray
+                                    //     })+"<@>"
+                                    // })
+                                    // .then(response => response.text())
+                                    // .then(xtensaResponse => {
+                                    //     externalPortArray=JSON.parse(xtensaResponse).externalPort;
+                                    //     buttonStatus(externalPortArray);
+                                    // });
+                                });
+                            }
+                            catch(error){
+                                console.error(error);
+                            }
+
+                            
+                            serverSend({
+                                instruction:64,
+                                extPrtDirectBit:getbButtonID
+                            },getServerTime);
+                           
+                            
+
+
+                        }
+                    </script>
+                </div>
+            </div>
+
+            <div class="contentDiv" id="option 4div">                                                            <!--option 4-->
+                
+                <div class="elegantDiv" >Console Log</div>
+		        <div id="consoleLog" class="consoleDiv"></div>
+
+                <script>
+
+                    function consoleLog(dataLog){
+                        document.getElementById("consoleLog").innerHTML+="<span style=\"color: #FF00FF;\">User @ "+getLocalTime()+"</span><br>"+dataLog+"<br><br>";
+					    document.getElementById("consoleLog").scrollTop = document.getElementById("consoleLog").scrollHeight;
+                    }
+                    consoleLog("app started")
+                    function getLocalTime(){
+                        const localTime=new Date();
+                        var days=["Sun","Mon","Tue","Wed","Thr","Fri","Sat"];
+                        var month=["Jan","Feb","March","April","May","June","July","Aug","Sep","Oct","Nov","Dec"];
+                        var localYear=localTime.getFullYear();
+                        var localMonth=localTime.getMonth();
+                        var localDate=localTime.getDate();
+                        var localDay=localTime.getDay();
+                        var localHour=localTime.getHours();
+                        var localMinutes=localTime.getMinutes();
+                        var localSeconds=localTime.getSeconds();
+                        return ""+localHour+"-"+localMinutes+"-"+localSeconds+" "+days[localDay]+" "+localDate+" "+month[localMonth]+" "+localYear+"";
+                    }
+                </script>
+            </div>
+            <div class="contentDiv" id="option 5div">                                                       <!--option 5-->
+                
+                
+
+
+                <div class="quadChannelSerialConsole" style="height: calc(100% - 95px); overflow-y: scroll;">
+                    <div id="serialRX0-view">
+                        <div class="elegantDiv" style="position:sticky;"><strong style="float:left;">CH 0</strong>
+                            <div class="colorIndicator" style="background-color: aqua; " onclick="zoomConsole(document.getElementById('serialRX0'));setAsActiveConsole(document.getElementById('serialRX0'))"></div>
+                        </div>
+                        <div style="float: right; margin-right: 5px;"> 
+                            <select id="serialRX0-baudRate" class="serialUserInputSelect" onchange="serialBaudRateUpdated(this)" style="font-size: 15px; border-color: aqua;">
+                                <option value="1200">1200</option>
+                                <option value="2400">2400</option>
+                                <option value="4800">4800</option>
+                                <option value="9600">9600</option>
+                                <option value="0">SPI</option>
+                            </select>
+                        </div>
+                        <br>
+                        <pre class="quadChannelSerialInput" style="border-color: aqua; color: aqua;" id="serialRX0" ondblclick="zoomConsole(this)" onclick="setAsActiveConsole(this)">
+                            
+                        </pre>
+                    </div>
+                    <div id="serialRX1-view">
+                        <div class="elegantDiv" style="position:sticky;"><strong style="float:left;">CH 1</strong>
+                            <div class="colorIndicator" style="background-color: magenta; "onclick="zoomConsole(document.getElementById('serialRX1'));setAsActiveConsole(document.getElementById('serialRX1'))"></div>
+                        </div>
+                        <div style="float: right; margin-right: 5px;"> 
+                            <select id="serialRX1-baudRate" class="serialUserInputSelect" onchange="serialBaudRateUpdated(this)" style="font-size: 15px; border-color: magenta;"></select>
+                        </div>
+                        <br>
+                        <pre class="quadChannelSerialInput" style="border-color: magenta; color: magenta;" id="serialRX1" ondblclick="zoomConsole(this)" onclick="setAsActiveConsole(this)">
+                            
+                        </pre>
+                    </div>
+                    <div id="serialRX2-view">
+                        <div class="elegantDiv" style="position:sticky;"><strong style="float:left;">CH 2</strong>
+                            <div class="colorIndicator" style="background-color: limegreen; "onclick="zoomConsole(document.getElementById('serialRX2'));setAsActiveConsole(document.getElementById('serialRX2'))"></div>
+                        </div>
+                        <div style="float: right; margin-right: 5px;"> 
+                            <select id="serialRX2-baudRate" class="serialUserInputSelect" onchange="serialBaudRateUpdated(this)" style="font-size: 15px; border-color: limegreen;"></select>
+                        </div>
+                        <br>
+                        <pre class="quadChannelSerialInput" style="border-color: limegreen; color: limegreen;" id="serialRX2" ondblclick="zoomConsole(this)" onclick="setAsActiveConsole(this)">
+
+                        </pre>
+                    </div>
+                    <div id="serialRX3-view">
+                        <div class="elegantDiv" style="position:sticky;"><strong style="float:left;">CH 3</strong>
+                            <div class="colorIndicator" style="background-color: goldenrod; "onclick="zoomConsole(document.getElementById('serialRX3'));setAsActiveConsole(document.getElementById('serialRX3'))"></div>
+                        </div>
+                        <div style="float: right; margin-right: 5px;"> 
+                            <select id="serialRX3-baudRate" class="serialUserInputSelect" onchange="serialBaudRateUpdated(this)" style="font-size: 15px; border-color: goldenrod;"></select>
+                        </div>
+                        <br>
+                        <pre class="quadChannelSerialInput" style="border-color: goldenrod; color: goldenrod;" id="serialRX3" ondblclick="zoomConsole(this)" onclick="setAsActiveConsole(this)">
+                            
+                        </pre>
+                    </div>
+                </div>
+                
+                <div class="serialConsoleSend" style="position: sticky;" >
+                    <input type="text" id="userSerialTextInput" class="mainSerialTextInput" placeholder=" > Enter Command" autocomplete="OFF" onkeydown="hitEnter()">
+                    <br>
+
+                    <div style="max-width: calc( 100% - 160px); overflow: scroll; float: right; " id="dummy-scroll-into-view" >
+
+                        <div style=" width: max-content; margin-right: 0.5%; margin-top: 3px;  height: 20px">
+                            <div style="margin-right:4px; float: right;">
+                                <button class="btn btn-outline-special" style="font-size: 15px;" onclick="userSerialSend()" ><strong>Send</strong></button>
+                            </div>
+                            <div style="margin-right:4px; float: right;">
+                                <button class="btn btn-outline-special" style="font-size: 15px;" onclick="clearSerialConsole()"><strong>Clear Logs</strong></button>
+                            </div>
+                            <div style="margin-right:4px; float: right;">
+                                <select name="" id="serialInputSelectChannel" class="serialUserInputSelect" onchange="serialSelectChannelOnChange()">
+                                    <option value="0">CH-0</option>
+                                    <option value="1">CH-1</option>
+                                    <option value="2">CH-2</option>
+                                    <option value="3">CH-3</option>
+                                </select>
+                            </div>
+                            <div style="margin-right:4px; float: right;">
+                                 
+                                <select name="" id="serialInputSelectBaudRate" class="serialUserInputSelect" onchange="serialSelectBaudRateOnChange()">
+                                    <option value="1200">1200</option>
+                                    <option value="2400">2400</option>
+                                    <option value="4800">4800</option>
+                                    <option value="9600">9600</option>
+                                </select>
+                            </div>
+                            <div style="margin-right:4px; float: right;">
+                                NL <input type="checkbox" class="form-check-inputSpecial" id="userSerialInputEnableNL" onchange="serialEnableNLOnChange()">
+                            </div>
+                            <div style="margin-right:4px; float: right;">
+                                CR <input type="checkbox" class="form-check-inputSpecial" id="userSerialInputEnableCR" onchange="serialEnableCROnChange()">
+                            </div>
+
+                        </div>
+                        
+                        
+
+                    </div>
+
+                    <div style="float: left; width: 150px; margin-left: 0.1%; margin-top: 3px;">
+                        <div style="margin-left:3%; float: left;">
+                            <button class="btn btn-outline-special" style="font-size: 15px;" onclick="serialStartConnection(this)"><strong>Connect</strong></button>
+                        </div>
+                        <div style="margin-left:3%; float: left;">
+                            <button class="btn btn-outline-special" style="font-size: 15px;" id="updateBaudRate" onclick="setUpdatedBuadRate(this)"><strong>Apply</strong></button>
+                        </div>
+                    </div>
+                </div>
+
+                <script>
+                    window.addEventListener("load",()=>{
+                        document.getElementById("dummy-scroll-into-view").scrollLeft=65535;
+                    });
+
+                    document.getElementById("serialRX0").ondblclick="";//why did i do it like this??
+                    document.getElementById("serialRX1").ondblclick="";
+                    document.getElementById("serialRX2").ondblclick="";
+                    document.getElementById("serialRX3").ondblclick="";
+                    
+
+                    const APP_SELECTOR=document.getElementById("appSelector");
+
+                    const USER_SERIAL_TEXT_INPUT=document.getElementById("userSerialTextInput");
+                    const USER_SELECTED_BAUDRATE=document.getElementById("serialInputSelectBaudRate");
+                    const USER_SELECTED_SERIAL_CHANNEL=document.getElementById("serialInputSelectChannel");
+                    const SERIAL_ENABLE_CR=document.getElementById("userSerialInputEnableCR");
+                    const SERIAL_ENABLE_NL=document.getElementById("userSerialInputEnableNL");
+
+                    const SERIAL_RX0_BAUDRATE=document.getElementById("serialRX0-baudRate");
+                    const SERIAL_RX1_BAUDRATE=document.getElementById("serialRX1-baudRate");
+                    const SERIAL_RX2_BAUDRATE=document.getElementById("serialRX2-baudRate");
+                    const SERIAL_RX3_BAUDRATE=document.getElementById("serialRX3-baudRate");
+
+                    const SERIAL_RX_CONSOLE_SELECTOR=[document.getElementById("serialRX0"),document.getElementById("serialRX1"),document.getElementById("serialRX2"),document.getElementById("serialRX3")];
+
+                    SERIAL_RX_CONSOLE_SELECTOR[0].innerHTML="";
+                    SERIAL_RX_CONSOLE_SELECTOR[1].innerHTML="";
+                    SERIAL_RX_CONSOLE_SELECTOR[2].innerHTML="";
+                    SERIAL_RX_CONSOLE_SELECTOR[3].innerHTML="";
+
+                    //SERIAL_RX0_BAUDRATE.innerHTML=USER_SELECTED_BAUDRATE.innerHTML;
+                    SERIAL_RX1_BAUDRATE.innerHTML=SERIAL_RX0_BAUDRATE.innerHTML;
+                    SERIAL_RX2_BAUDRATE.innerHTML=SERIAL_RX0_BAUDRATE.innerHTML;
+                    SERIAL_RX3_BAUDRATE.innerHTML=SERIAL_RX0_BAUDRATE.innerHTML;
+                    
+                    if(localStorage.getItem("serialQuadChannelBaudRate")==null){
+                        localStorage.setItem("serialQuadChannelBaudRate",JSON.stringify({
+                            serialBaudRateChannel0:SERIAL_RX0_BAUDRATE.value,
+                            serialBaudRateChannel1:SERIAL_RX1_BAUDRATE.value,
+                            serialBaudRateChannel2:SERIAL_RX2_BAUDRATE.value,
+                            serialBaudRateChannel3:SERIAL_RX3_BAUDRATE.value,
+                            serialBaudRateSpiCheck:{
+                                serialBaudRateChannel0:SERIAL_RX0_BAUDRATE.value,
+                                serialBaudRateChannel1:SERIAL_RX1_BAUDRATE.value,
+                                serialBaudRateChannel2:SERIAL_RX2_BAUDRATE.value,
+                                serialBaudRateChannel3:SERIAL_RX3_BAUDRATE.value
+                            }
+                        }));
+                    }
+
+                    var serialQuadChannelBaudRate=JSON.parse(localStorage.getItem("serialQuadChannelBaudRate"));
+                    SERIAL_RX0_BAUDRATE.value=serialQuadChannelBaudRate.serialBaudRateChannel0;
+                    SERIAL_RX1_BAUDRATE.value=serialQuadChannelBaudRate.serialBaudRateChannel1;
+                    SERIAL_RX2_BAUDRATE.value=serialQuadChannelBaudRate.serialBaudRateChannel2;
+                    SERIAL_RX3_BAUDRATE.value=serialQuadChannelBaudRate.serialBaudRateChannel3;
+
+                    const BAUDRATE_UPDATED=document.getElementById("updateBaudRate").style.borderColor;
+                    function serialBaudRateUpdated(serialInputChannel){
+                        var serialInputChannelBuffer=serialInputChannel.value;
+                        serialQuadChannelBaudRate=JSON.parse(localStorage.getItem("serialQuadChannelBaudRate"));
+                        if((serialQuadChannelBaudRate.serialBaudRateChannel0==0)||(serialQuadChannelBaudRate.serialBaudRateChannel1==0)||(serialQuadChannelBaudRate.serialBaudRateChannel2==0)||(serialQuadChannelBaudRate.serialBaudRateChannel3==0)){
+                            SERIAL_RX0_BAUDRATE.value=serialQuadChannelBaudRate.serialBaudRateSpiCheck.serialBaudRateChannel0;
+                            SERIAL_RX1_BAUDRATE.value=serialQuadChannelBaudRate.serialBaudRateSpiCheck.serialBaudRateChannel1;
+                            SERIAL_RX2_BAUDRATE.value=serialQuadChannelBaudRate.serialBaudRateSpiCheck.serialBaudRateChannel2;
+                            SERIAL_RX3_BAUDRATE.value=serialQuadChannelBaudRate.serialBaudRateSpiCheck.serialBaudRateChannel3;
+                        }
+                        serialInputChannel.value=serialInputChannelBuffer;
+                        const serialQuadChannelBaudRateBuffer={
+                            serialBaudRateChannel0:SERIAL_RX0_BAUDRATE.value,
+                            serialBaudRateChannel1:SERIAL_RX1_BAUDRATE.value,
+                            serialBaudRateChannel2:SERIAL_RX2_BAUDRATE.value,
+                            serialBaudRateChannel3:SERIAL_RX3_BAUDRATE.value,
+                            serialBaudRateSpiCheck:{
+                                serialBaudRateChannel0:SERIAL_RX0_BAUDRATE.value,
+                                serialBaudRateChannel1:SERIAL_RX1_BAUDRATE.value,
+                                serialBaudRateChannel2:SERIAL_RX2_BAUDRATE.value,
+                                serialBaudRateChannel3:SERIAL_RX3_BAUDRATE.value
+                            }
+
+                        }
+                        if(serialInputChannel.value==0){
+                            SERIAL_RX0_BAUDRATE.value=serialInputChannel.value;
+                            SERIAL_RX1_BAUDRATE.value=serialInputChannel.value;
+                            SERIAL_RX2_BAUDRATE.value=serialInputChannel.value;
+                            SERIAL_RX3_BAUDRATE.value=serialInputChannel.value;
+                            
+                            serialQuadChannelBaudRateBuffer.serialBaudRateChannel0=SERIAL_RX0_BAUDRATE.value;
+                            serialQuadChannelBaudRateBuffer.serialBaudRateChannel1=SERIAL_RX1_BAUDRATE.value;
+                            serialQuadChannelBaudRateBuffer.serialBaudRateChannel2=SERIAL_RX2_BAUDRATE.value;
+                            serialQuadChannelBaudRateBuffer.serialBaudRateChannel3=SERIAL_RX3_BAUDRATE.value;
+
+                            serialQuadChannelBaudRateBuffer.serialBaudRateSpiCheck.serialBaudRateChannel0=serialQuadChannelBaudRate.serialBaudRateChannel0;
+                            serialQuadChannelBaudRateBuffer.serialBaudRateSpiCheck.serialBaudRateChannel1=serialQuadChannelBaudRate.serialBaudRateChannel1;
+                            serialQuadChannelBaudRateBuffer.serialBaudRateSpiCheck.serialBaudRateChannel2=serialQuadChannelBaudRate.serialBaudRateChannel2;
+                            serialQuadChannelBaudRateBuffer.serialBaudRateSpiCheck.serialBaudRateChannel3=serialQuadChannelBaudRate.serialBaudRateChannel3;
+                        }
+                        document.getElementById("updateBaudRate").style.borderColor=serialInputChannel.style.borderColor;
+                        localStorage.setItem("serialQuadChannelBaudRate",JSON.stringify(serialQuadChannelBaudRateBuffer));
+                    }
+
+
+
+
+                    if(localStorage.getItem("serial.enableNL")==null){
+                        localStorage.setItem("serial.enableNL",SERIAL_ENABLE_NL.checked);
+                    }
+                    SERIAL_ENABLE_NL.checked=(localStorage.getItem("serial.enableNL")=="true");
+
+                    function serialEnableNLOnChange(){
+                        localStorage.setItem("serial.enableNL",SERIAL_ENABLE_NL.checked);
+                    }
+
+
+                    if(localStorage.getItem("serial.enableCR")==null){
+                        localStorage.setItem("serial.enableCR",SERIAL_ENABLE_CR.checked);
+                    }
+                    SERIAL_ENABLE_CR.checked=(localStorage.getItem("serial.enableCR")=="true");
+
+                    function serialEnableCROnChange(){
+                        localStorage.setItem("serial.enableCR",SERIAL_ENABLE_CR.checked);
+                    }
+
+
+                    if(localStorage.getItem("serial.selctedBaudRate")==null){
+                        localStorage.setItem("serial.selctedBaudRate",USER_SELECTED_BAUDRATE.value);
+                    }
+                    USER_SELECTED_BAUDRATE.value=localStorage.getItem("serial.selctedBaudRate");
+
+                    function serialSelectBaudRateOnChange(){
+                        localStorage.setItem("serial.selctedBaudRate",USER_SELECTED_BAUDRATE.value);
+                    }
+
+
+                    if(localStorage.getItem("serial.selctedChannel")==null){
+                        localStorage.setItem("serial.selctedChannel",USER_SELECTED_SERIAL_CHANNEL.value);
+                    }
+                    USER_SELECTED_SERIAL_CHANNEL.value=localStorage.getItem("serial.selctedChannel");
+                    
+                    function serialSelectChannelOnChange(){
+                        //USER_SERIAL_TEXT_INPUT.style.color=document.getElementById("serialRX"+USER_SELECTED_SERIAL_CHANNEL.value).style.color;
+                        USER_SERIAL_TEXT_INPUT.style.borderColor=document.getElementById("serialRX"+USER_SELECTED_SERIAL_CHANNEL.value).style.color;
+                        localStorage.setItem("serial.selctedChannel",USER_SELECTED_SERIAL_CHANNEL.value);
+                    }
+
+                    serialSelectChannelOnChange();
+
+                    var LAST_MAX_CONSOLE=null;
+                    function zoomConsole(serialInputConsole){
+                        localStorage.setItem("lastMaxConsole",serialInputConsole.id);
+                        var displayConsoleDiv="block";
+                        if(LAST_MAX_CONSOLE==null){     //max
+                            LAST_MAX_CONSOLE=serialInputConsole;
+                            LAST_MAX_CONSOLE.style.height="calc(100% - 41px)";
+                            displayConsoleDiv="none";
+                        }
+                        else{                           //min
+                            LAST_MAX_CONSOLE.style.height="calc((100% - 149px)/4)";
+                            LAST_MAX_CONSOLE=null;
+                            localStorage.removeItem("lastMaxConsole");
+                        }
+                        for(var consoleCounter=0;consoleCounter<4;consoleCounter++){
+                            if(("serialRX"+consoleCounter)!=serialInputConsole.id){
+                                document.getElementById("serialRX"+consoleCounter+"-view").style.display=displayConsoleDiv;
+                            }
+                        }
+                    }
+
+                    if(localStorage.getItem("lastMaxConsole")!=null){
+                        zoomConsole(document.getElementById(localStorage.getItem("lastMaxConsole")));
+                    }
+
+
+                    var serialWebSocket=null;
+
+                    var enableButtonText="<strong>Disconnect</strong>";
+                    function serialStartConnection(serialStart){
+                        if(serialStart!=undefined){
+                            var enableButtonTextBuffer=serialStart.innerHTML;
+                            serialStart.innerHTML=enableButtonText;
+                            enableButtonText=enableButtonTextBuffer;
+                        }
+                        
+                        if(serialWebSocket==null){
+
+                            const serialEnable="data:"+JSON.stringify({instruction:0x10})+"<@>";
+                            serialWebSocket=new WebSocket("ws://"+localStorage.getItem("IP_ADDRESS"));
+                            
+                            serialWebSocket.onopen=()=>{
+                                serialWebSocket.send(serialEnable);
+                                setTimeout(()=>{
+                                    serialWebSocket.send(JSON.stringify({
+                                        serialInst:2,
+                                        serialInputBaudRate:[SERIAL_RX0_BAUDRATE.value,SERIAL_RX1_BAUDRATE.value,SERIAL_RX2_BAUDRATE.value,SERIAL_RX3_BAUDRATE.value]
+                                    }));
+                                },100);
+                            }
+                            serialWebSocket.onmessage=(webSocketMessage)=>{
+                                // if(webSocketMessage.data!="Sk9ITiBLSEFMSUw="){
+                                //     var selectedSerialConsole=JSON.parse(webSocketMessage.data.slice(0,webSocketMessage.data.search(","))+"]}").ch[0];
+                                //     SERIAL_RX_CONSOLE_SELECTOR[selectedSerialConsole].innerHTML+=webSocketMessage.data.slice((webSocketMessage.data.search(",")+2),(webSocketMessage.data.length-3));
+                                //     SERIAL_RX_CONSOLE_SELECTOR[selectedSerialConsole].scrollTop = SERIAL_RX_CONSOLE_SELECTOR[selectedSerialConsole].scrollHeight;
+                                // }
+                                var selectedSerialConsole=JSON.parse(webSocketMessage.data.slice(0,webSocketMessage.data.search(","))+"]}").ch[0];
+                                SERIAL_RX_CONSOLE_SELECTOR[selectedSerialConsole].innerHTML+=webSocketMessage.data.slice((webSocketMessage.data.search(",")+2),(webSocketMessage.data.length-3));
+                                //the above line is a really bad algorithm, but it was me being lazy and taking a shortcut to save some resources (memory and cpu)
+                                SERIAL_RX_CONSOLE_SELECTOR[selectedSerialConsole].scrollTop = SERIAL_RX_CONSOLE_SELECTOR[selectedSerialConsole].scrollHeight;
+                            }
+                            serialWebSocket.onclose=()=>{
+                                setTimeout(()=>{
+                                    if(serialWebSocket!=null){
+                                        console.log("reconnect serial port",getLocalTime());
+                                        serialStartConnection();
+                                    }
+                                },200);    
+                            }
+                            serialWebSocket.onerror=(error)=>{
+                                
+                            }
+
+                        }
+                        else{
+                            serialWebSocket=null;
+
+                        }
+                    }
+
+
+                    function setUpdatedBuadRate(applyUpdateButton){
+                        if(serialWebSocket!=null){
+                            applyUpdateButton.style.borderColor=BAUDRATE_UPDATED;
+                            serialWebSocket.send(JSON.stringify({
+                                serialInst:2,
+                                serialInputBaudRate:[SERIAL_RX0_BAUDRATE.value,SERIAL_RX1_BAUDRATE.value,SERIAL_RX2_BAUDRATE.value,SERIAL_RX3_BAUDRATE.value]
+                            }));
+                        }
+                    }
+                    
+                    function userSerialSend(){
+                        if(serialWebSocket!=null){
+                            serialWebSocket.send(JSON.stringify({
+                                serialInst:1,
+                                serialChannel:USER_SELECTED_SERIAL_CHANNEL.value,
+                                baudRate:USER_SELECTED_BAUDRATE.value,
+                                _CR:(SERIAL_ENABLE_CR.checked==true)*1,
+                                _NL:(SERIAL_ENABLE_NL.checked==true)*1,
+                                serialData:USER_SERIAL_TEXT_INPUT.value
+                            }));
+                            USER_SERIAL_TEXT_INPUT.value=null;
+                        }
+                    }
+
+                    function hitEnter() {
+                        if(event.key === 'Enter') {
+                            userSerialSend();
+                        }
+                    }
+
+                    var SERIAL_INPUT_CONSOLE=null;
+                    function clearSerialConsole(){
+                        if(SERIAL_INPUT_CONSOLE!=null){
+                            SERIAL_INPUT_CONSOLE.innerHTML="";
+                        }
+                    }
+                     
+                    function setAsActiveConsole(activeConsole){
+                        SERIAL_INPUT_CONSOLE=activeConsole;
+                    }
+
+                </script>
+
+
+            </div>
+        </div>
+        <script>
+
+            if(localStorage.getItem("USER_SELECTED_OPTION")==null){
+                localStorage.setItem("USER_SELECTED_OPTION","option 1");
+            }
+
+
+            var lastSelectedItem=null;
+            function divSelect(divID){
+                localStorage.setItem("USER_SELECTED_OPTION",divID.id);
+                if(lastSelectedItem!=null){
+                    lastSelectedItem.style.backgroundColor ="rgba(44, 42, 42, 0.666)";
+                    //document.getElementById(""+lastSelectedItem.id+"div").innerHTML=document.getElementById("userView").innerHTML;
+                    document.getElementById(""+lastSelectedItem.id+"div").style.display="none";
+                }
+                lastSelectedItem=divID;
+                //document.getElementById("userView").innerHTML=document.getElementById(""+divID.id+"div").innerHTML;
+                //document.getElementById(""+divID.id+"div").innerHTML="";
+                document.getElementById(""+divID.id+"div").style.display="block";
+                divID.style.backgroundColor ="#ff8c1a";
+                // console.log("test >> ",divID.id);
+            }
+
+            divSelect(document.getElementById(localStorage.getItem("USER_SELECTED_OPTION")));
+
+
+
+
+
+
+
+
+
+
+
+
+            if(localStorage.getItem("IP_ADDRESS")==null){
+                localStorage.setItem("IP_ADDRESS","192.168.4.1");
+            }
+            var DEVICE_FOUND=0;
+            const http=new XMLHttpRequest();   http.withCredentials = false;
+			http.timeout=500;
+			http.onreadystatechange=(e)=>{
+				if(http.readyState==4){
+					// console.log("response text >> ",http.responseText);
+					if(http.responseText=="Sk9ITiBLSEFMSUw=\r\n"){
+                        DEVICE_FOUND=1;
+                        updateDeviceStatus();
+                    }
+				}
+			}
+			var internetProtocol=localStorage.getItem("IP_ADDRESS");
+			var url="";
+			function openUrl(httpData){
+				var webLink="http://"+internetProtocol+"/"+url+"<@>";
+				http.open("POST",webLink);
+				// console.log("http data >> ",httpData);
+				if(httpData!=undefined)
+					http.send(httpData);
+				else
+					http.send();
+                
+			}
+            openUrl();
+
+            function updateDeviceStatus(){
+                if(DEVICE_FOUND){
+                    document.getElementById("device status").innerHTML="<strong>CONNECTED</strong>";
+                    document.getElementById("device status").style.backgroundColor="#ff8d1a50";
+                    document.getElementById("userAddress").value=localStorage.getItem("IP_ADDRESS");
+                    document.getElementById("scanning-state").innerHTML="DEVICE FOUND";
+                }
+                else{
+                    document.getElementById("device status").innerHTML="<strong>DISCONNECTED</strong>";
+                    document.getElementById("device status").backgroundColor="rgba(44, 42, 42, 0.666)";
+                }
+            }
+
+            const httpTest=new XMLHttpRequest();
+            httpTest.timeout=500;
+            var checkIP="";
+            var continousScan=0;
+            var IP_COUNTER=3;
+            httpTest.onreadystatechange=(err)=>{
+                if(httpTest.readyState==4){
+                    console.log("response text >> ",httpTest.responseText);
+                    if(httpTest.responseText=="Sk9ITiBLSEFMSUw=\r\n"){
+                        localStorage.setItem("IP_ADDRESS",checkIP);
+                        internetProtocol=localStorage.getItem("IP_ADDRESS");
+                        DEVICE_FOUND=1;
+                        updateDeviceStatus();
+                        continousScan=0;
+                    }
+                    if((continousScan==1)&&(httpTest.responseText!="Sk9ITiBLSEFMSUw=\r\n")&&IP_COUNTER<256){
+                        checkIP="192.168.1."+(IP_COUNTER++)+"";
+                        checkDeviceIP();
+                    }
+                    if((!continousScan)&&(httpTest.responseText!="Sk9ITiBLSEFMSUw=\r\n")){//failed
+                        document.getElementById("scanning-state").innerHTML="no device found";
+                    }
+                    if((continousScan==1)&&(httpTest.responseText!="Sk9ITiBLSEFMSUw=\r\n")&&IP_COUNTER==256){//failed
+                        document.getElementById("scanning-state").innerHTML="no device found";
+                    }
+
+                }
+            }
+            function checkDeviceIP(){
+                httpTest.open("POST","http://"+checkIP+"");
+                httpTest.send();
+            }
+            function userScanForIP(){
+                document.getElementById("scanning-state").innerHTML="scanning.......";
+                var userAddressIP=document.getElementById("userAddress").value;
+                if(userAddressIP==""){
+                    continousScan=1;
+                    checkIP="192.168.1.2";
+                    checkDeviceIP();
+                }
+                else{
+                    checkIP=userAddressIP;
+                    checkDeviceIP();
+                }
+            }
+
+            function signalStrength(dbm){
+                if(dbm>(-60)){
+                    return document.getElementById("signal-level-4").innerHTML;
+                }
+                else if(dbm>(-75)){
+                    return document.getElementById("signal-level-3").innerHTML;
+                }
+                else if(dbm>(-80)){
+                    return document.getElementById("signal-level-2").innerHTML;
+                }
+                else if(dbm>(-90)){
+                    return document.getElementById("signal-level-1").innerHTML;
+                }
+                return document.getElementById("signal-level-0").innerHTML;
+            }
+
+
+
+
+
+
+            function getAvailableNetworks(){
+                const xtensaPost="data:"+JSON.stringify({instruction:1})+"<@>";
+                fetch('http://'+localStorage.getItem("IP_ADDRESS"),{
+                    method:"POST",
+                    body:xtensaPost
+                })
+                .then(response => response.text())
+                .then(xtensaResponse => {
+                    // console.log("data from fetch >> ",xtensaResponse);
+                    consoleLog(xtensaResponse);
+                    const xtensaResponsObject=JSON.parse(xtensaResponse);
+                    // console.log(xtensaResponsObject);
+
+                    var showNetworks="";
+                    var idCounter=0;
+                    
+                    for(var counter=0;counter<xtensaResponsObject.network.length;counter++){
+                        showNetworks+="<div class=\"networkContent\" id=\"network-";
+                        showNetworks+=idCounter;
+                        showNetworks+="\" onclick=\"setFinalNetwork(this)\">";
+                        showNetworks+=signalStrength(parseInt(xtensaResponsObject.network[counter+1]));
+                        showNetworks+="<div class=\"networkSSID\" id=\"network-";
+                        showNetworks+=idCounter;
+                        showNetworks+="-SSID\">"+xtensaResponsObject.network[counter]+"</div></div>";
+                        counter++;
+                        idCounter++;
+                    }
+                    document.getElementById("showNetworks").innerHTML=showNetworks;//*/
+                });
+            }
+            setTimeout(()=>{
+                // getAvailableNetworks();
+            },1000);
+            
+            function showUserPassword(checkElement){
+                var textBox=document.getElementById("finalPassword");
+                if(checkElement.checked){
+                    textBox.type="text";
+                }
+                else{
+                    textBox.type="password";
+                }
+            }
+            function setFinalNetwork(networkOption){
+                var previousElementColor=networkOption.style.backgroundColor;
+                networkOption.style.backgroundColor="#ff8d1a50";
+                setTimeout(()=>{
+                    networkOption.style.backgroundColor=previousElementColor;
+                },30);
+                document.getElementById("finalNetwork").value=document.getElementById(networkOption.id+"-SSID").innerHTML;
+            }
+
+            function connectToFianlNetwork(){
+                const networkData={
+                    instruction:2,
+                    networkSSID:document.getElementById("finalNetwork").value.toString(),
+                    networkPASS:document.getElementById("finalPassword").value.toString()
+                }
+                const xtensaPostNetwork="data:"+JSON.stringify(networkData)+"<@>";
+                fetch("http://"+localStorage.getItem("IP_ADDRESS"),{
+                    method:"POST",
+                    body:xtensaPostNetwork
+                }).then(response=>response.text())
+                .then(xtensaResponse=>{
+                    console.log("get ack >> ",xtensaResponse);
+                });
+            }
+            
+        </script>
+        <script src="https://unpkg.com/@popperjs/core@2.4.0/dist/umd/popper.min.js"></script>
+        <script src="bootstrap/js/bootstrap.js"></script>
+    </body>
+</html>
