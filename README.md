@@ -11,7 +11,7 @@ This tool include a quad channel logic analyzer that can catch pulses up to 2us 
 here are some pics to demonstrate:
 
 Here is an example of the logic Analyzer sampling the signal of HCSR-04 ultrasonic sensor
-<p align="center">
+<p align="left">
   <img src="https://github.com/John-Khalil/esp8266-debugger/blob/main/pics/hcsr04%20test.jpg?raw=true" width="480" >
 </p>
 
