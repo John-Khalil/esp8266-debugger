@@ -13,5 +13,5 @@ here is some pics to demonstrate:
 
 
 <p align="center">
-  <img src="https://raw.githubusercontent.com/John-Khalil/esp8266-debugger/main/pics/scan%20for%20wifi.jpg" width="350" >
+  <img src="https://raw.githubusercontent.com/John-Khalil/esp8266-debugger/main/pics/scan%20for%20wifi.jpg" width="480" >
 </p>
