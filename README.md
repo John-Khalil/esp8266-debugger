@@ -8,10 +8,19 @@ This tool include a quad channel logic analyzer that can catch pulses up to 2us 
 
 (Note: this project Built using the nonos sdk version 2.7.4 and the ESP8266 was clocked at 80MHz)
 
-here is some pics to demonstrate:
+here are some pics to demonstrate:
 
-
-
+Here is an example of the logic Analyzer sampling the signal of HCSR-04 ultrasonic sensor
 <p align="center">
-  <img src="https://raw.githubusercontent.com/John-Khalil/esp8266-debugger/main/pics/scan%20for%20wifi.jpg" width="480" >
+  <img src="https://github.com/John-Khalil/esp8266-debugger/blob/main/pics/hcsr04%20test.jpg?raw=true" width="480" >
+</p>
+
+PWM signal @ 1KHz
+<p align="center">
+  <img src="https://github.com/John-Khalil/esp8266-debugger/blob/main/pics/pwm%20test.jpg?raw=true" width="480" >
+</p>
+
+SPI CLK and DATA line
+<p align="center">
+  <img src="https://github.com/John-Khalil/esp8266-debugger/blob/main/pics/SPI%20test.jpg?raw=true" width="480" >
 </p>
