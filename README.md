@@ -16,11 +16,16 @@ Here is an example of the logic Analyzer sampling the signal of HCSR-04 ultrason
 </p>
 
 PWM signal @ 1KHz
-<p align="center">
+<p align="left">
   <img src="https://github.com/John-Khalil/esp8266-debugger/blob/main/pics/pwm%20test.jpg?raw=true" width="480" >
 </p>
 
 SPI CLK and DATA line
-<p align="center">
+<p align="left">
   <img src="https://github.com/John-Khalil/esp8266-debugger/blob/main/pics/SPI%20test.jpg?raw=true" width="480" >
+</p>
+
+SERIAL PORT for console logs
+<p align="left">
+  <img src="https://github.com/John-Khalil/esp8266-debugger/blob/main/pics/spi%20console1.jpg?raw=true" width="480" >
 </p>
